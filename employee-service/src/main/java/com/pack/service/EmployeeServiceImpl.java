@@ -33,6 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setFirstName(dto.getFirstName());
 		employee.setLastName(dto.getLastName());
 		employee.setEmail(dto.getEmail());
+		employee.setDepartmentCode(dto.getDepartmentCode());
 		return employee;
 	}
 
@@ -42,6 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		dto.setFirstName(employee.getFirstName());
 		dto.setLastName(employee.getLastName());
 		dto.setEmail(employee.getEmail());
+		dto.setDepartmentCode(employee.getDepartmentCode());
 		return dto;
 	}
 }
