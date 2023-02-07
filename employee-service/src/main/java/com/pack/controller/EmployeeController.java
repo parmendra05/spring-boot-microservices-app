@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pack.dto.ApiResponse;
 import com.pack.dto.EmployeeDto;
 import com.pack.service.EmployeeService;
 
@@ -28,8 +29,8 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/get/{id}")
-	public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") Long id) {
-		EmployeeDto dtoResponse = service.getEmployeeById(id);
+	public ResponseEntity<ApiResponse> getEmployeeById(@PathVariable("id") Long id) {
+		ApiResponse dtoResponse = service.getEmployeeById(id);
 		return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
 	}
 

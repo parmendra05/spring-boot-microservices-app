@@ -1,7 +1,11 @@
 package com.pack.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.pack.dto.ApiResponse;
+import com.pack.dto.DepartmentDto;
 import com.pack.dto.EmployeeDto;
 import com.pack.entity.Employee;
 import com.pack.repository.EmployeeRepository;
@@ -14,6 +18,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	private EmployeeRepository repository;
 
+	private RestTemplate restTemplate;
+
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto dto) {
 		Employee employee = mapToEntity(dto);
@@ -22,9 +28,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeDto getEmployeeById(Long id) {
+	public ApiResponse getEmployeeById(Long id) {
 		Employee employee = repository.findById(id).get();
-		return mapToDto(employee);
+
+		ResponseEntity<DepartmentDto> dtoResponse = restTemplate.getForEntity(
+				"http://localhost:9091/department/api/get/" + employee.getDepartmentCode(), DepartmentDto.class);
+
+		ApiResponse apiResponse = new ApiResponse();
+		apiResponse.setEmployeeDto(mapToDto(employee));
+		apiResponse.setDepartmentDto(dtoResponse.getBody());
+
+		return apiResponse;
 	}
 
 	private Employee mapToEntity(EmployeeDto dto) {
