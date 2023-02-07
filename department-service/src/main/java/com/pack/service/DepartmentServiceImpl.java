@@ -21,8 +21,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public DepartmentDto getDepartmentById(Long id) {
-		Department department = repository.findById(id).get();
+	public DepartmentDto getDepartmentByCode(String code) {
+		Department department = repository.findByDepartmentCode(code);
 		return mapToDto(department);
 	}
 
