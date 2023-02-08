@@ -3,6 +3,7 @@ package com.pack.service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.pack.dto.ApiResponse;
 import com.pack.dto.DepartmentDto;
@@ -18,7 +19,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	private EmployeeRepository repository;
 
-	private RestTemplate restTemplate;
+	// private RestTemplate restTemplate;
+
+	private WebClient webClient;
 
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto dto) {
@@ -31,12 +34,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ApiResponse getEmployeeById(Long id) {
 		Employee employee = repository.findById(id).get();
 
-		ResponseEntity<DepartmentDto> dtoResponse = restTemplate.getForEntity(
-				"http://localhost:9091/department/api/get/" + employee.getDepartmentCode(), DepartmentDto.class);
+		// ResponseEntity<DepartmentDto> dtoResponse = restTemplate.getForEntity(
+		// "http://localhost:9091/department/api/get/" + employee.getDepartmentCode(),
+		// DepartmentDto.class);
+
+		DepartmentDto dtoResponse = webClient.get()
+				.uri("http://localhost:9091/department/api/get/" + employee.getDepartmentCode()).retrieve()
+				.bodyToMono(DepartmentDto.class).block();
 
 		ApiResponse apiResponse = new ApiResponse();
 		apiResponse.setEmployeeDto(mapToDto(employee));
-		apiResponse.setDepartmentDto(dtoResponse.getBody());
+		apiResponse.setDepartmentDto(dtoResponse);
 
 		return apiResponse;
 	}
