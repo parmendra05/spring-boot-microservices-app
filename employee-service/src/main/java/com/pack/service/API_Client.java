@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.pack.dto.DepartmentDto;
 
-@FeignClient(url = "http://localhost:9091", value = "DEPARTMENT-SERVICE")
+@FeignClient(name = "DEPARTMENT-SERVICE")
 public interface API_Client {
 
 	// Written same method like department-controller
