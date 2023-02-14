@@ -11,6 +11,7 @@ import com.pack.dto.EmployeeDto;
 import com.pack.entity.Employee;
 import com.pack.repository.EmployeeRepository;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -30,6 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return mapToDto(savedEmployee);
 	}
 
+	@CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
 	@Override
 	public ApiResponse getEmployeeById(Long id) {
 		Employee employee = repository.findById(id).get();
@@ -65,5 +67,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 		dto.setEmail(employee.getEmail());
 		dto.setDepartmentCode(employee.getDepartmentCode());
 		return dto;
+	}
+
+	public ApiResponse getDefaultDepartment(Long id, Exception exception) {
+		Employee employee = repository.findById(id).get();
+
+		DepartmentDto defaultDepartment = new DepartmentDto();
+		defaultDepartment.setDepartmentName("R&D Department");
+		defaultDepartment.setDepartmentCode("RD00");
+		defaultDepartment.setDepartmentDescription("Research And Development Department");
+
+		ApiResponse apiResponse = new ApiResponse();
+		apiResponse.setEmployeeDto(mapToDto(employee));
+		apiResponse.setDepartmentDto(defaultDepartment);
+		return apiResponse;
 	}
 }
