@@ -12,6 +12,7 @@ import com.pack.entity.Employee;
 import com.pack.repository.EmployeeRepository;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -31,7 +32,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return mapToDto(savedEmployee);
 	}
 
-	@CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
+	//@CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
+	@Retry(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
 	@Override
 	public ApiResponse getEmployeeById(Long id) {
 		Employee employee = repository.findById(id).get();
